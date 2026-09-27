@@ -8,18 +8,103 @@ document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   // --------------------------------------------------------------------------
-  // 01: INITIALIZE APPLICATION LOAD STATE & PAGE TRANSITION
+  // 01: CINEMATIC EV STARTUP LOADER & LIFECYCLE CONTROLLER
   // --------------------------------------------------------------------------
-  window.addEventListener('load', () => {
-    document.body.classList.remove('loading');
-    document.body.classList.add('loaded');
-  });
+  const initPageLoader = () => {
+    const loader = document.getElementById('pageLoader');
+    if (!loader) {
+      document.body.classList.remove('loading');
+      document.body.classList.add('loaded');
+      return;
+    }
 
-  // Fast fallback if window.load already completed
-  if (document.readyState === 'complete') {
-    document.body.classList.remove('loading');
-    document.body.classList.add('loaded');
-  }
+    const loaderProgressBar = document.getElementById('loaderProgressBar');
+    const loaderPercent = document.getElementById('loaderPercent');
+    const loaderStatusText = document.getElementById('loaderStatusText');
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let isDismissed = false;
+
+    const statusMilestones = [
+      { at: 15, text: 'INITIALIZING SYSTEMS' },
+      { at: 42, text: 'CALIBRATING POWERTRAIN' },
+      { at: 75, text: 'TORQUE VECTORING ACTIVE' },
+      { at: 92, text: 'NEURAL COPILOT ENGAGED' },
+      { at: 100, text: 'SYSTEM READY' }
+    ];
+
+    let currentProgress = 0;
+    const targetDuration = prefersReducedMotion ? 500 : 2300; // ~2.3s cinematic sequence
+    const startTime = performance.now();
+
+    const updateLoaderProgress = (now) => {
+      if (isDismissed) return;
+
+      const elapsed = now - startTime;
+      const progressRatio = Math.min(elapsed / targetDuration, 1);
+
+      // Smooth progression with slight acceleration curve
+      const easedProgress = Math.floor(Math.pow(progressRatio, 1.25) * 100);
+      currentProgress = Math.min(Math.max(easedProgress, currentProgress), 100);
+
+      if (loaderProgressBar) {
+        loaderProgressBar.style.width = `${currentProgress}%`;
+      }
+      if (loaderPercent) {
+        loaderPercent.textContent = `${String(currentProgress).padStart(2, '0')}%`;
+      }
+
+      // Update telemetry milestone text
+      if (loaderStatusText) {
+        for (let i = statusMilestones.length - 1; i >= 0; i--) {
+          if (currentProgress >= statusMilestones[i].at) {
+            if (loaderStatusText.textContent !== statusMilestones[i].text) {
+              loaderStatusText.textContent = statusMilestones[i].text;
+            }
+            break;
+          }
+        }
+      }
+
+      if (progressRatio < 1) {
+        requestAnimationFrame(updateLoaderProgress);
+      } else {
+        dismissLoader();
+      }
+    };
+
+    const dismissLoader = () => {
+      if (isDismissed) return;
+      isDismissed = true;
+
+      if (loaderProgressBar) loaderProgressBar.style.width = '100%';
+      if (loaderPercent) loaderPercent.textContent = '100%';
+      if (loaderStatusText) loaderStatusText.textContent = 'SYSTEM READY';
+
+      // Brief cinematic hold at 100% before smooth fade-out
+      setTimeout(() => {
+        loader.classList.add('loader-dismissed');
+        document.body.classList.remove('loading');
+        document.body.classList.add('loaded');
+
+        // Completely detach from render tree after fade completes
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 700);
+      }, prefersReducedMotion ? 80 : 220);
+    };
+
+    // Kick off animation loop
+    requestAnimationFrame(updateLoaderProgress);
+
+    // Safety timeout: ensure loader dismisses under slow network conditions
+    const MAX_LOADER_TIMEOUT = 3800;
+    setTimeout(() => {
+      dismissLoader();
+    }, MAX_LOADER_TIMEOUT);
+  };
+
+  initPageLoader();
 
   // --------------------------------------------------------------------------
   // 02: CUSTOM CURSOR ENGINE (DESKTOP)

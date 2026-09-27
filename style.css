@@ -3592,3 +3592,423 @@ html.lenis, html.lenis body {
     transform: none !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   26: CINEMATIC EV STARTUP LOADING SCREEN (#pageLoader)
+   -------------------------------------------------------------------------- */
+#pageLoader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #030303;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6vh 5vw 5vh 5vw;
+  overflow: hidden;
+  pointer-events: all;
+  user-select: none;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.65s ease;
+  will-change: opacity, transform;
+}
+
+#pageLoader.loader-dismissed {
+  opacity: 0;
+  transform: scale(1.03);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Background Atmosphere */
+.loader-ambient-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  height: 60vh;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.08) 0%, rgba(0, 110, 255, 0.03) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.loader-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top/Center Brand Animation */
+.loader-brand-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: loaderBrandFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.loader-brand-mark {
+  margin-bottom: 12px;
+  color: var(--accent);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.45));
+}
+
+.loader-emblem {
+  width: 36px;
+  height: 36px;
+}
+
+.loader-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #ffffff;
+}
+
+.loader-word-aura {
+  color: #ffffff;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+  animation: auraWordSpread 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.loader-word-motors {
+  font-weight: 400;
+  color: var(--accent);
+  text-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+}
+
+.loader-tagline {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 6px;
+}
+
+/* Motion Stage & Road Horizon */
+.loader-motion-stage {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  overflow: visible;
+}
+
+/* Speed Lines Racing in Opposite Direction (Leftward) */
+.loader-speed-lines {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 180px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.speed-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.6), rgba(255, 255, 255, 0.8), transparent);
+  border-radius: 999px;
+  animation: speedLineRush 0.75s linear infinite;
+}
+
+.line-1 { top: 25%; width: 220px; animation-delay: 0.1s; animation-duration: 0.6s; opacity: 0.45; }
+.line-2 { top: 42%; width: 340px; animation-delay: 0.35s; animation-duration: 0.48s; opacity: 0.75; }
+.line-3 { top: 60%; width: 180px; animation-delay: 0.05s; animation-duration: 0.55s; opacity: 0.5; }
+.line-4 { top: 78%; width: 290px; animation-delay: 0.25s; animation-duration: 0.52s; opacity: 0.6; }
+.line-5 { top: 88%; width: 160px; animation-delay: 0.45s; animation-duration: 0.65s; opacity: 0.35; }
+
+@keyframes speedLineRush {
+  0% {
+    transform: translate3d(100vw, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(-100vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* Moving EV Car Rig */
+.loader-car-rig {
+  position: absolute;
+  top: 48%;
+  left: 0;
+  width: 480px;
+  max-width: 85vw;
+  height: 220px;
+  margin-top: -110px;
+  z-index: 4;
+  pointer-events: none;
+  /* Acceleration curve: smooth entry, rapid acceleration across center, high speed exit */
+  animation: carAccelerateAcross 2.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  will-change: transform;
+}
+
+/* Forward Headlight Beam (aimed towards right) */
+.car-headlight-beam {
+  position: absolute;
+  top: 48%;
+  right: -240px;
+  width: 320px;
+  height: 80px;
+  background: radial-gradient(ellipse at left, rgba(0, 229, 255, 0.75) 0%, rgba(0, 229, 255, 0.25) 30%, transparent 75%);
+  transform: translateY(-50%) rotate(4deg);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+/* Chassis Underglow */
+.car-underglow {
+  position: absolute;
+  bottom: 30px;
+  left: 15%;
+  right: 15%;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.5) 0%, rgba(0, 229, 255, 0.1) 60%, transparent 80%);
+  filter: blur(8px);
+  z-index: 1;
+}
+
+/* Rear Light Trail (stretching leftward behind car) */
+.car-light-trail {
+  position: absolute;
+  top: 42%;
+  left: -220px;
+  width: 260px;
+  height: 14px;
+  background: linear-gradient(90deg, transparent, rgba(255, 20, 70, 0.2), rgba(255, 20, 70, 0.7) 70%, rgba(255, 60, 100, 0.95));
+  filter: blur(5px);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.8;
+}
+
+/* Car Image Frame with Flipped Car */
+.loader-car-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.loader-car-img {
+  width: 100%;
+  height: auto;
+  max-height: 190px;
+  object-fit: contain;
+  /* Flip car horizontally so headlights face forward to the RIGHT */
+  transform: scaleX(-1);
+  /* Edge softening to seamlessly blend with deep black */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent),
+              linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent),
+                      linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+  filter: contrast(1.08) brightness(1.04) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.9));
+}
+
+/* Realistic Automotive Acceleration Keyframe */
+@keyframes carAccelerateAcross {
+  0% {
+    transform: translate3d(-110vw, 0, 0) scale(0.92);
+    opacity: 0;
+  }
+  15% {
+    transform: translate3d(-35vw, 0, 0) scale(0.96);
+    opacity: 0.95;
+  }
+  42% {
+    transform: translate3d(5vw, 0, 0) scale(1.0);
+    opacity: 1;
+  }
+  70% {
+    transform: translate3d(52vw, 0, 0) scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(120vw, 0, 0) scale(1.05);
+    opacity: 0.7;
+  }
+}
+
+/* Road Perspective Horizon */
+.loader-road {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(255, 255, 255, 0.15) 25%, rgba(0, 229, 255, 0.5) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 95%);
+  z-index: 1;
+}
+
+.road-glow {
+  position: absolute;
+  top: -8px;
+  left: 10%;
+  right: 10%;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.25) 0%, transparent 75%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* Bottom Telemetry Status */
+.loader-telemetry {
+  position: relative;
+  z-index: 10;
+  width: min(500px, 90vw);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loader-status-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.telemetry-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 10px var(--accent);
+  animation: pulseDot 1s infinite alternate;
+}
+
+.loader-percent {
+  color: #ffffff;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.loader-progress-track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loader-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #ffffff);
+  border-radius: 999px;
+  box-shadow: 0 0 12px var(--accent);
+  transition: width 0.15s ease-out;
+}
+
+/* Brand keyframes */
+@keyframes loaderBrandFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auraWordSpread {
+  0% {
+    letter-spacing: 0.38em;
+    opacity: 0.3;
+  }
+  100% {
+    letter-spacing: 0.22em;
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .loader-car-rig {
+    width: 340px;
+    height: 160px;
+    margin-top: -80px;
+  }
+  .loader-motion-stage {
+    height: 220px;
+  }
+  .car-headlight-beam {
+    width: 200px;
+    right: -150px;
+    height: 60px;
+  }
+  .car-light-trail {
+    width: 160px;
+    left: -130px;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  #pageLoader {
+    transition: opacity 0.3s ease !important;
+  }
+  .loader-car-rig,
+  .speed-line,
+  .telemetry-dot,
+  .loader-brand-container,
+  .loader-word-aura {
+    animation: none !important;
+  }
+  .loader-car-rig {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    left: 50% !important;
+    margin-left: -240px !important;
+    opacity: 1 !important;
+  }
+  .loader-speed-lines {
+    display: none !important;
+  }
+}
