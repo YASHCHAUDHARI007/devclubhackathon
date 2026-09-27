@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance & Telemetry | AURA MOTORS</title>
+  <meta name="description" content="Experience AURA electric performance: 800 HP, 0–100 km/h in 2.8s, 620 km range. Run the live launch simulation with real-time G-force telemetry.">
+  <meta name="theme-color" content="#050505">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="loading">
+
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- Ambient Sound Control Bar -->
+  <aside class="audio-control-bar" aria-label="Audio controller">
+    <button class="sound-toggle-btn" id="soundToggle" aria-label="Toggle synthetic electric drive sound" title="Toggle Electric Propulsion Audio">
+      <span class="sound-bars" aria-hidden="true">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </span>
+      <span class="sound-text">SOUND: OFF</span>
+    </button>
+  </aside>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="AURA MOTORS Homepage">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 22h20L12 2z"></path>
+            <path d="M7 16h10"></path>
+          </svg>
+        </span>
+        <span class="logo-text">AURA <span>MOTORS</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="models.html" class="nav-link">Models</a>
+        <a href="the-car.html" class="nav-link">The Car</a>
+        <a href="performance.html" class="nav-link active">Performance</a>
+        <a href="technology.html" class="nav-link">Technology</a>
+        <a href="interior.html" class="nav-link">Interior</a>
+        <a href="sustainability.html" class="nav-link">Sustainability</a>
+        <a href="contact.html" class="nav-link">Experience</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="configurator.html" class="btn btn-nav">
+          <span class="btn-arrow" aria-hidden="true">→</span>
+          <span class="btn-text">Configure</span>
+        </a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <nav class="drawer-nav">
+        <a href="index.html" class="drawer-link">Overview</a>
+        <a href="models.html" class="drawer-link">Models</a>
+        <a href="the-car.html" class="drawer-link">The Car</a>
+        <a href="performance.html" class="drawer-link active">Performance</a>
+        <a href="technology.html" class="drawer-link">Technology</a>
+        <a href="interior.html" class="drawer-link">Interior</a>
+        <a href="sustainability.html" class="drawer-link">Sustainability</a>
+        <a href="contact.html" class="drawer-link">Experience</a>
+        <a href="configurator.html" class="drawer-link">Configurator</a>
+      </nav>
+      <div class="drawer-footer">
+        <a href="configurator.html" class="btn btn-primary btn-block drawer-cta">
+          <span class="btn-arrow" aria-hidden="true">→</span>
+          <span class="btn-text">Configure Your Aura</span>
+        </a>
+        <div class="drawer-meta">
+          <span>0–100 KM/H in 2.8 SEC</span>
+          <span>AURA MOTORS © 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="mainContent" class="page-transition">
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+      <div class="section-container">
+        <div class="section-badge">BENCHMARKS & PROPULSION</div>
+        <h1 class="page-title">
+          NUMBERS<br>
+          <span class="gradient-text">THAT SPEAK.</span>
+        </h1>
+        <p class="section-description">
+          Zero hesitation. Immediate electric torque translated directly through customized silicon-carbide inverters into tarmac dominance.
+        </p>
+      </div>
+    </section>
+
+    <!-- METRICS GRID -->
+    <section class="section" id="performance" style="padding-top: 10px; border-top: none;">
+      <div class="section-container">
+
+        <!-- Animated Counter Cards -->
+        <div class="metrics-grid reveal-on-scroll">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-index">01</span>
+              <span class="metric-name">HORSEPOWER</span>
+            </div>
+            <div class="metric-body">
+              <span class="counter-value" data-target="800">0</span>
+              <span class="metric-unit">HP</span>
+            </div>
+            <p class="metric-detail">Twin high-rpm synchronous motors delivering relentless linear acceleration.</p>
+            <div class="metric-bar-bg"><div class="metric-bar-fill" style="width: 88%;"></div></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-index">02</span>
+              <span class="metric-name">ACCELERATION</span>
+            </div>
+            <div class="metric-body">
+              <span class="counter-value" data-target="2.8" data-decimals="1">0.0</span>
+              <span class="metric-unit">SEC</span>
+            </div>
+            <p class="metric-detail">0 to 100 km/h sprint under launch mode with instant all-wheel vectoring.</p>
+            <div class="metric-bar-bg"><div class="metric-bar-fill" style="width: 96%;"></div></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-index">03</span>
+              <span class="metric-name">ESTIMATED RANGE</span>
+            </div>
+            <div class="metric-body">
+              <span class="counter-value" data-target="620">0</span>
+              <span class="metric-unit">KM</span>
+            </div>
+            <p class="metric-detail">Structural 110 kWh battery matrix with intelligent thermal conditioning.</p>
+            <div class="metric-bar-bg"><div class="metric-bar-fill" style="width: 82%;"></div></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-index">04</span>
+              <span class="metric-name">TOP SPEED</span>
+            </div>
+            <div class="metric-body">
+              <span class="counter-value" data-target="250">0</span>
+              <span class="metric-unit">KM/H</span>
+            </div>
+            <p class="metric-detail">Electronically governed aerodynamic cruising speed on Autobahn specifications.</p>
+            <div class="metric-bar-bg"><div class="metric-bar-fill" style="width: 79%;"></div></div>
+          </div>
+        </div>
+
+        <!-- Interactive Launch Telemetry Simulation -->
+        <div class="telemetry-box reveal-on-scroll" style="margin-top: 40px;">
+          <div class="telemetry-header">
+            <div class="telemetry-title-group">
+              <span class="telemetry-badge">LIVE SIMULATION</span>
+              <h2 class="telemetry-title">Launch Telemetry & Power Distribution</h2>
+            </div>
+            <div class="telemetry-controls">
+              <button class="btn btn-secondary btn-sm" id="launchSimBtn">
+                <span class="btn-arrow" aria-hidden="true">⚡</span>
+                <span class="btn-text">Test Launch 0–100</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="telemetry-canvas-wrap">
+            <div class="telemetry-track">
+              <div class="track-line">
+                <div class="track-progress" id="trackProgress"></div>
+                <div class="track-indicator" id="trackIndicator">
+                  <span class="indicator-glow"></span>
+                  <span class="indicator-label" id="currentSpeedLabel">0 KM/H</span>
+                </div>
+              </div>
+              <div class="track-markers">
+                <span>0 KM/H</span>
+                <span>25 KM/H</span>
+                <span>50 KM/H</span>
+                <span>75 KM/H</span>
+                <span>100 KM/H</span>
+              </div>
+            </div>
+
+            <div class="telemetry-hud-grid">
+              <div class="hud-item">
+                <span class="hud-label">ELAPSED TIME</span>
+                <span class="hud-val" id="hudTimer">0.00 <small>s</small></span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">LONGITUDINAL G-FORCE</span>
+                <span class="hud-val" id="hudGForce">0.00 <small>G</small></span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">TORQUE SPLIT (F/R)</span>
+                <span class="hud-val" id="hudTorque">45% / 55%</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">INVERTER EFFICIENCY</span>
+                <span class="hud-val highlight">99.4%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Powertrain Breakdown -->
+        <div class="preview-grid reveal-on-scroll" style="margin-top: 80px;">
+          <div class="preview-media">
+            <img src="assets/cta.jpg" alt="AURA High Velocity Track Testing">
+          </div>
+          <div class="preview-content">
+            <div class="section-badge">TORQUE VECTORING</div>
+            <h2 class="section-title">SURGICAL TRACTION CONTROL</h2>
+            <p class="section-description">
+              Traditional differentials waste milliseconds transferring torque through mechanical gears. AURA calculates wheel slip at 10,000 Hertz, varying rotational torque wheel-by-wheel before human reflexes can even perceive tire slip.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">&lt; 1 ms</span>
+                <span class="p-lbl">RESPONSE LATENCY</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">1,050 Nm</span>
+                <span class="p-lbl">INSTANT TORQUE</span>
+              </div>
+            </div>
+            <div>
+              <a href="technology.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore Technology Architecture</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a href="index.html" class="footer-logo">
+            <span class="logo-mark" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 22h20L12 2z"></path>
+                <path d="M7 16h10"></path>
+              </svg>
+            </span>
+            <span class="logo-text">AURA <span>MOTORS</span></span>
+          </a>
+          <p class="footer-tagline">"PERFORMANCE, REIMAGINED."</p>
+          <p class="footer-desc">
+            A futuristic electric performance automobile company focused on speed, intelligent technology, sustainability, and ultra-minimal design.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">MODELS</span>
+          <ul>
+            <li><a href="models.html">AURA S — Touring</a></li>
+            <li><a href="models.html">AURA GT — Flagship</a></li>
+            <li><a href="models.html">AURA X — Track Edition</a></li>
+            <li><a href="configurator.html">Build & Price</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">ENGINEERING</span>
+          <ul>
+            <li><a href="the-car.html">The Car</a></li>
+            <li><a href="performance.html">Performance</a></li>
+            <li><a href="technology.html">AURA Drive OS</a></li>
+            <li><a href="technology.html">900V Architecture</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">EXPERIENCE</span>
+          <ul>
+            <li><a href="interior.html">Cockpit Sanctuary</a></li>
+            <li><a href="sustainability.html">Circularity & Materials</a></li>
+            <li><a href="configurator.html">Bespoke Studio</a></li>
+            <li><a href="contact.html">Book Test Drive</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-newsletter-col">
+          <span class="footer-heading">PRIVATE DISPATCH</span>
+          <p class="newsletter-sub">Receive confidential telemetry and upcoming allocations.</p>
+          <form class="newsletter-form" id="newsletterForm" onsubmit="return false;">
+            <div class="input-wrap">
+              <input type="email" id="newsletterEmail" placeholder="Enter your email" required aria-label="Email address for dispatch">
+              <button type="submit" class="btn-input-arrow" aria-label="Submit newsletter subscription">→</button>
+            </div>
+            <div class="newsletter-feedback" id="newsletterMsg" role="status"></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          © 2026 AURA MOTORS INC. ALL RIGHTS RESERVED.
+        </div>
+        <div class="footer-socials">
+          <a href="#" aria-label="Aura on X / Twitter" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on Instagram" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on YouTube" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on LinkedIn" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Scroll back to top" title="Back to top">
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <script src="assets/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

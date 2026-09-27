@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA MOTORS | Performance, Reimagined.</title>
+  <meta name="description" content="AURA MOTORS — An electric performance machine engineered for the next generation. 0–100 km/h in 2.8s, 620 km range, 800 horsepower.">
+  <meta name="theme-color" content="#050505">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AURA MOTORS | Performance, Reimagined.">
+  <meta property="og:description" content="An electric performance machine engineered for the next generation.">
+  <meta property="og:image" content="assets/hero.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="loading">
+
+  <!-- Custom Cursor Elements (Desktop only) -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- Ambient Sound Control Bar -->
+  <aside class="audio-control-bar" aria-label="Audio controller">
+    <button class="sound-toggle-btn" id="soundToggle" aria-label="Toggle synthetic electric drive sound" title="Toggle Electric Propulsion Audio">
+      <span class="sound-bars" aria-hidden="true">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </span>
+      <span class="sound-text">SOUND: OFF</span>
+    </button>
+  </aside>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="AURA MOTORS Homepage">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 22h20L12 2z"></path>
+            <path d="M7 16h10"></path>
+          </svg>
+        </span>
+        <span class="logo-text">AURA <span>MOTORS</span></span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="models.html" class="nav-link">Models</a>
+        <a href="the-car.html" class="nav-link">The Car</a>
+        <a href="performance.html" class="nav-link">Performance</a>
+        <a href="technology.html" class="nav-link">Technology</a>
+        <a href="interior.html" class="nav-link">Interior</a>
+        <a href="sustainability.html" class="nav-link">Sustainability</a>
+        <a href="contact.html" class="nav-link">Experience</a>
+      </nav>
+
+      <!-- Nav CTA -->
+      <div class="nav-actions">
+        <a href="configurator.html" class="btn btn-nav">
+          <span class="btn-arrow" aria-hidden="true">→</span>
+          <span class="btn-text">Configure</span>
+        </a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <nav class="drawer-nav">
+        <a href="index.html" class="drawer-link active">Overview</a>
+        <a href="models.html" class="drawer-link">Models</a>
+        <a href="the-car.html" class="drawer-link">The Car</a>
+        <a href="performance.html" class="drawer-link">Performance</a>
+        <a href="technology.html" class="drawer-link">Technology</a>
+        <a href="interior.html" class="drawer-link">Interior</a>
+        <a href="sustainability.html" class="drawer-link">Sustainability</a>
+        <a href="contact.html" class="drawer-link">Experience</a>
+        <a href="configurator.html" class="drawer-link">Configurator</a>
+      </nav>
+      <div class="drawer-footer">
+        <a href="configurator.html" class="btn btn-primary btn-block drawer-cta">
+          <span class="btn-arrow" aria-hidden="true">→</span>
+          <span class="btn-text">Configure Your Aura</span>
+        </a>
+        <div class="drawer-meta">
+          <span>0–100 KM/H in 2.8 SEC</span>
+          <span>AURA MOTORS © 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="mainContent" class="page-transition">
+
+    <!-- ==============================================
+         01: HERO SECTION
+         ============================================== -->
+    <section class="hero-section" id="hero" aria-label="Aura Hero Introduction">
+      <div class="hero-bg-container">
+        <img src="assets/hero.jpg" alt="AURA 01 Futuristic Electric Hypercar Front View" class="hero-bg-img" id="heroBgImg">
+        <div class="hero-overlay"></div>
+        <div class="hero-grid-lines" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-micro-label animate-fade-in">
+          <span class="label-badge">AURA / 01</span>
+          <span class="label-divider"></span>
+          <span class="label-sub">ALL-ELECTRIC GRAND TOURER</span>
+        </div>
+
+        <h1 class="hero-heading animate-slide-up">
+          PERFORMANCE,<br>
+          <span class="gradient-text">REIMAGINED.</span>
+        </h1>
+
+        <p class="hero-subtext animate-slide-up-delay">
+          An electric performance machine engineered for the next generation.
+        </p>
+
+        <div class="hero-buttons animate-slide-up-delay-2">
+          <a href="the-car.html" class="btn btn-secondary">
+            <span class="btn-arrow" aria-hidden="true">→</span>
+            <span class="btn-text">Explore The Car</span>
+          </a>
+          <a href="configurator.html" class="btn btn-primary">
+            <span class="btn-arrow" aria-hidden="true">→</span>
+            <span class="btn-text">Configure Yours</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Statistics Bar -->
+      <div class="hero-stats-wrapper">
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <span class="stat-label">0—100 KM/H</span>
+            <div class="stat-value-group">
+              <span class="stat-number">2.8</span>
+              <span class="stat-unit">SEC</span>
+            </div>
+            <span class="stat-footnote">Launch Control Active</span>
+          </div>
+
+          <div class="stat-separator" aria-hidden="true"></div>
+
+          <div class="hero-stat-item">
+            <span class="stat-label">RANGE (WLTP)</span>
+            <div class="stat-value-group">
+              <span class="stat-number">620</span>
+              <span class="stat-unit">KM</span>
+            </div>
+            <span class="stat-footnote">900V Ultra-Efficiency</span>
+          </div>
+
+          <div class="stat-separator" aria-hidden="true"></div>
+
+          <div class="hero-stat-item">
+            <span class="stat-label">PEAK POWER</span>
+            <div class="stat-value-group">
+              <span class="stat-number">800</span>
+              <span class="stat-unit">HP</span>
+            </div>
+            <span class="stat-footnote">Dual Permanent Magnet</span>
+          </div>
+        </div>
+
+        <a href="#featured-models" class="scroll-indicator" aria-label="Scroll to preview sections">
+          <span class="scroll-text">SCROLL TO EXPLORE</span>
+          <span class="scroll-arrow" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 01: FEATURED MODELS
+         ============================================== -->
+    <section class="section preview-section" id="featured-models" aria-label="Models Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/profile.jpg" alt="AURA GT Flagship Electric Sedan Profile">
+          </div>
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">MODEL LINEUP</div>
+            <h2 class="section-title">
+              THREE EXPRESSIONS<br>OF MASTERY.
+            </h2>
+            <p class="section-description">
+              From the ultra-efficient endurance of AURA S, to the 800 HP flagship AURA GT, to the 1,050 HP track weapon AURA X.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">3</span>
+                <span class="p-lbl">MODELS</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">1050 HP</span>
+                <span class="p-lbl">MAX VELOCITY</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">2.1 SEC</span>
+                <span class="p-lbl">FASTEST SPRINT</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="models.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore All Models</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 02: THE CAR / DESIGN
+         ============================================== -->
+    <section class="section preview-section" id="car-preview" aria-label="The Car Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">AERODYNAMICS & DESIGN</div>
+            <h2 class="section-title">
+              DESIGNED TO<br>MOVE YOU.
+            </h2>
+            <p class="section-description">
+              Sculpted with aerodynamic mastery and 0.208 Cd slipstream contours. Inspect dynamic torque vectoring, active intake shutters, and lightweight carbon composites.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">0.208</span>
+                <span class="p-lbl">DRAG COEFFICIENT</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">100%</span>
+                <span class="p-lbl">CARBON MONOCOQUE</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="the-car.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Inspect The Car</span>
+              </a>
+            </div>
+          </div>
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/profile_silver.jpg" alt="AURA Titanium Silver Technical Architecture">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 03: PERFORMANCE PREVIEW
+         ============================================== -->
+    <section class="section preview-section" id="performance-preview" aria-label="Performance Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/cta.jpg" alt="AURA Performance Launch at Midnight">
+          </div>
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">BENCHMARKS & SPEED</div>
+            <h2 class="section-title">
+              NUMBERS<br>THAT SPEAK.
+            </h2>
+            <p class="section-description">
+              Relentless linear thrust. Experience live launch telemetry with real-time longitudinal G-force calculations, instant dual-motor torque split, and 0–100 km/h simulation.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">800 HP</span>
+                <span class="p-lbl">PEAK POWER</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">2.8 S</span>
+                <span class="p-lbl">0—100 KM/H</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">620 KM</span>
+                <span class="p-lbl">WLTP RANGE</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="performance.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore Performance</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 04: TECHNOLOGY PREVIEW
+         ============================================== -->
+    <section class="section preview-section" id="technology-preview" aria-label="Technology Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">INTELLIGENCE & ARCHITECTURE</div>
+            <h2 class="section-title">
+              INTELLIGENCE,<br>BUILT IN.
+            </h2>
+            <p class="section-description">
+              Explore our bento-grid technology suite: 750 TOPS neural copilot, 1,000 Hz adaptive magnetic suspension, 300-meter all-weather LiDAR vision, and 900V ultra-fast charging.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">900V</span>
+                <span class="p-lbl">ARCHITECTURE</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">18 MIN</span>
+                <span class="p-lbl">10→80% RECHARGE</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="technology.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore Technology</span>
+              </a>
+            </div>
+          </div>
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/chassis.jpg" alt="AURA 110 kWh Skateboard Chassis Architecture">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 05: INTERIOR PREVIEW
+         ============================================== -->
+    <section class="section preview-section" id="interior-preview" aria-label="Interior Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/interior.jpg" alt="AURA Cockpit Panoramic OLED Horizon">
+          </div>
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">CABIN SANCTUARY</div>
+            <h2 class="section-title">
+              EVERYTHING<br>WITHIN REACH.
+            </h2>
+            <p class="section-description">
+              A serene digital sanctuary. Continuous 48-inch curved 5K OLED horizon cluster, minimal touch surfaces, bespoke spatial acoustics, and tactile vegan luxury.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">48"</span>
+                <span class="p-lbl">CURVED 5K OLED</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">24</span>
+                <span class="p-lbl">SPATIAL SPEAKERS</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="interior.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore Interior</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PREVIEW 06: SUSTAINABILITY PREVIEW
+         ============================================== -->
+    <section class="section preview-section" id="sustainability-preview" aria-label="Sustainability Preview">
+      <div class="section-container">
+        <div class="preview-grid">
+          <div class="preview-content reveal-on-scroll">
+            <div class="section-badge">CIRCULAR ENGINEERING</div>
+            <h2 class="section-title">
+              THE FUTURE<br>SHOULD LEAVE<br>LESS BEHIND.
+            </h2>
+            <p class="section-description">
+              100% electric propulsion with zero tailpipe emissions, 82% recycled closed-loop aluminum, and biodegradable bio-composite cabin surfaces.
+            </p>
+            <div class="preview-stats-mini">
+              <div class="p-stat">
+                <span class="p-val">100%</span>
+                <span class="p-lbl">ELECTRIC</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-val">ZERO</span>
+                <span class="p-lbl">EMISSIONS</span>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <a href="sustainability.html" class="btn btn-secondary">
+                <span class="btn-arrow" aria-hidden="true">→</span>
+                <span class="btn-text">Explore Sustainability</span>
+              </a>
+            </div>
+          </div>
+          <div class="preview-media reveal-on-scroll">
+            <img src="assets/sustainability.jpg" alt="Sustainable Recycled Flax and Brushed Titanium">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         FINAL CTA
+         ============================================== -->
+    <section class="final-cta-section" id="cta" aria-label="Get Started">
+      <div class="cta-bg-container">
+        <img src="assets/cta.jpg" alt="AURA Hypercar Accelerating into Midnight" class="cta-bg-img">
+        <div class="cta-overlay"></div>
+      </div>
+
+      <div class="cta-content reveal-on-scroll">
+        <div class="cta-micro-tag">THE NEXT GENERATION OF SPEED</div>
+        <h2 class="cta-heading">
+          READY TO<br>
+          <span class="gradient-text">MOVE DIFFERENTLY?</span>
+        </h2>
+        <p class="cta-subtext">
+          Configure your bespoke AURA GT or schedule a confidential test drive at your nearest flagship studio.
+        </p>
+        <div class="cta-actions">
+          <a href="configurator.html" class="btn btn-primary btn-lg">
+            <span class="btn-arrow" aria-hidden="true">→</span>
+            <span class="btn-text">Configure Your AURA</span>
+          </a>
+          <a href="contact.html" class="btn btn-secondary btn-lg">
+            <span class="btn-arrow" aria-hidden="true">→</span>
+            <span class="btn-text">Reserve Test Drive</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==============================================
+       FOOTER
+       ============================================== -->
+  <footer class="site-footer" id="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a href="index.html" class="footer-logo">
+            <span class="logo-mark" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 22h20L12 2z"></path>
+                <path d="M7 16h10"></path>
+              </svg>
+            </span>
+            <span class="logo-text">AURA <span>MOTORS</span></span>
+          </a>
+          <p class="footer-tagline">"PERFORMANCE, REIMAGINED."</p>
+          <p class="footer-desc">
+            A futuristic electric performance automobile company focused on speed, intelligent technology, sustainability, and ultra-minimal design.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">MODELS</span>
+          <ul>
+            <li><a href="models.html">AURA S — Touring</a></li>
+            <li><a href="models.html">AURA GT — Flagship</a></li>
+            <li><a href="models.html">AURA X — Track Edition</a></li>
+            <li><a href="configurator.html">Build & Price</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">ENGINEERING</span>
+          <ul>
+            <li><a href="the-car.html">The Car</a></li>
+            <li><a href="performance.html">Performance</a></li>
+            <li><a href="technology.html">AURA Drive OS</a></li>
+            <li><a href="technology.html">900V Architecture</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <span class="footer-heading">EXPERIENCE</span>
+          <ul>
+            <li><a href="interior.html">Cockpit Sanctuary</a></li>
+            <li><a href="sustainability.html">Circularity & Materials</a></li>
+            <li><a href="configurator.html">Bespoke Studio</a></li>
+            <li><a href="contact.html">Book Test Drive</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-newsletter-col">
+          <span class="footer-heading">PRIVATE DISPATCH</span>
+          <p class="newsletter-sub">Receive confidential telemetry and upcoming allocations.</p>
+          <form class="newsletter-form" id="newsletterForm" onsubmit="return false;">
+            <div class="input-wrap">
+              <input type="email" id="newsletterEmail" placeholder="Enter your email" required aria-label="Email address for dispatch">
+              <button type="submit" class="btn-input-arrow" aria-label="Submit newsletter subscription">→</button>
+            </div>
+            <div class="newsletter-feedback" id="newsletterMsg" role="status"></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          © 2026 AURA MOTORS INC. ALL RIGHTS RESERVED.
+        </div>
+        <div class="footer-socials">
+          <a href="#" aria-label="Aura on X / Twitter" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on Instagram" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on YouTube" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Aura on LinkedIn" class="social-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Scroll back to top" title="Back to top">
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <!-- JavaScript -->
+  <script src="assets/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
