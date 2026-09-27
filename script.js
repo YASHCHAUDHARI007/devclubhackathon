@@ -28,43 +28,79 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorDot = document.getElementById('cursorDot');
     const cursorRing = document.getElementById('cursorRing');
 
-    if (cursorDot && cursorRing && window.matchMedia('(pointer: fine)').matches) {
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      let ringX = mouseX;
-      let ringY = mouseY;
-      let isMoving = false;
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-        if (!isMoving) {
-          cursorDot.style.opacity = '1';
-          cursorRing.style.opacity = '1';
-          isMoving = true;
-        }
-      });
-
-      const renderCursor = () => {
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
-        cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-        requestAnimationFrame(renderCursor);
-      };
-      renderCursor();
-
-      const hoverSelectors = 'a, button, input, select, label, .tech-callout, .swatch-btn, .pill-option, .bento-card, .model-card, .liquid-glass, .metric-card, [data-expandable="true"]';
-      document.querySelectorAll(hoverSelectors).forEach((el) => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-      });
-
-      document.addEventListener('mouseleave', () => {
-        cursorDot.style.opacity = '0';
-        cursorRing.style.opacity = '0';
-      });
+    if (!cursorDot || !cursorRing || !hasFinePointer || prefersReducedMotion) {
+      if (cursorDot) cursorDot.style.display = 'none';
+      if (cursorRing) cursorRing.style.display = 'none';
+      return;
     }
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let rafId = null;
+    let isVisible = false;
+
+    const renderCursor = () => {
+      const dx = mouseX - ringX;
+      const dy = mouseY - ringY;
+      ringX += dx * 0.22;
+      ringY += dy * 0.22;
+      cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+
+      // Stop loop when settled to save CPU cycles
+      if (Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15) {
+        rafId = requestAnimationFrame(renderCursor);
+      } else {
+        rafId = null;
+      }
+    };
+
+    const startCursorLoop = () => {
+      if (!rafId && !document.hidden) {
+        rafId = requestAnimationFrame(renderCursor);
+      }
+    };
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+
+      if (!isVisible) {
+        cursorDot.style.opacity = '1';
+        cursorRing.style.opacity = '1';
+        isVisible = true;
+      }
+
+      startCursorLoop();
+    }, { passive: true });
+
+    const hoverSelectors = 'a, button, input, select, label, .tech-callout, .swatch-btn, .pill-option, .bento-card, .model-card, .liquid-glass, .metric-card, [data-expandable="true"]';
+    document.querySelectorAll(hoverSelectors).forEach((el) => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'), { passive: true });
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'), { passive: true });
+    });
+
+    document.addEventListener('mouseleave', () => {
+      cursorDot.style.opacity = '0';
+      cursorRing.style.opacity = '0';
+      isVisible = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    });
   };
 
   // --------------------------------------------------------------------------
@@ -157,7 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileDrawer = document.getElementById('mobileDrawer');
     const drawerLinks = document.querySelectorAll('.drawer-link, .drawer-cta');
 
-    // Navbar scroll blur state
+    // Navbar scroll blur state (Coalesced via RAF)
+    let navTicking = false;
     const handleScroll = () => {
       const scrollPos = window.scrollY;
       if (navbar) {
@@ -167,12 +204,26 @@ document.addEventListener('DOMContentLoaded', () => {
         backToTopBtn.classList.toggle('visible', scrollPos > 400);
       }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    window.addEventListener('scroll', () => {
+      if (!navTicking) {
+        navTicking = true;
+        requestAnimationFrame(() => {
+          handleScroll();
+          navTicking = false;
+        });
+      }
+    }, { passive: true });
     handleScroll();
 
+    // Back to top: use Lenis if active, otherwise native fallback
     if (backToTopBtn) {
       backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (globalLenis) {
+          globalLenis.scrollTo(0, { duration: 1.2 });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
     }
 
@@ -212,7 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Mobile drawer toggle
+    // Mobile drawer toggle & accessibility
+    let lastHamburgerFocus = null;
     const toggleDrawer = (forceClose = false) => {
       if (!hamburgerBtn || !mobileDrawer) return;
       const isOpen = forceClose ? false : !mobileDrawer.classList.contains('open');
@@ -222,7 +274,24 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileDrawer.classList.toggle('open', isOpen);
       mobileDrawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 
+      const mainContent = document.getElementById('mainContent');
+      if (mainContent) {
+        mainContent.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+      }
+
       document.body.style.overflow = isOpen ? 'hidden' : '';
+
+      if (isOpen) {
+        lastHamburgerFocus = hamburgerBtn;
+        const firstFocusable = mobileDrawer.querySelector('a, button');
+        if (firstFocusable) {
+          setTimeout(() => firstFocusable.focus(), 60);
+        }
+      } else {
+        if (lastHamburgerFocus) {
+          lastHamburgerFocus.focus();
+        }
+      }
     };
 
     if (hamburgerBtn) {
@@ -232,6 +301,29 @@ document.addEventListener('DOMContentLoaded', () => {
     drawerLinks.forEach((link) => {
       link.addEventListener('click', () => toggleDrawer(true));
     });
+
+    // Keyboard support: Escape closes mobile drawer; Tab traps focus
+    document.addEventListener('keydown', (e) => {
+      if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+        if (e.key === 'Escape') {
+          toggleDrawer(true);
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = mobileDrawer.querySelectorAll('a[href], button:not([disabled])');
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
   };
 
   // --------------------------------------------------------------------------
@@ -240,6 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const initScrollReveals = () => {
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
     if (!revealElements.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      revealElements.forEach((el) => el.classList.add('revealed'));
+      return;
+    }
 
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -262,6 +360,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const initCounters = () => {
     const counterElements = document.querySelectorAll('.counter-value');
     if (!counterElements.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      counterElements.forEach((counter) => {
+        const target = parseFloat(counter.getAttribute('data-target'));
+        const decimals = parseInt(counter.getAttribute('data-decimals') || '0', 10);
+        counter.textContent = target.toFixed(decimals);
+      });
+      return;
+    }
 
     let countersAnimated = false;
 
@@ -327,10 +435,21 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let isLaunching = false;
 
     launchSimBtn.addEventListener('click', () => {
       if (isLaunching) return;
+
+      if (prefersReducedMotion) {
+        trackProgress.style.width = '100%';
+        trackIndicator.style.left = '100%';
+        currentSpeedLabel.textContent = '100 KM/H';
+        hudTimer.innerHTML = '2.80 <small>s</small>';
+        hudGForce.innerHTML = '1.25 <small>G</small>';
+        return;
+      }
+
       isLaunching = true;
       launchSimBtn.disabled = true;
       launchSimBtn.style.opacity = '0.6';
@@ -377,21 +496,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // 08: BENTO GRID DYNAMIC CURSOR GLOW
+  // 08: BENTO GRID DYNAMIC CURSOR GLOW (Delegated cleanly to Liquid Glass)
   // --------------------------------------------------------------------------
   const initBentoEffects = () => {
-    const bentoCards = document.querySelectorAll('.bento-card');
-    if (!bentoCards.length) return;
-
-    bentoCards.forEach((card) => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
-    });
+    // Reused through initLiquidGlassCards to avoid duplicate mousemove listeners
   };
 
   // --------------------------------------------------------------------------
@@ -890,10 +998,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (storyMediaImg && item.img) {
             storyMediaImg.style.opacity = '0';
-            setTimeout(() => {
+            const preload = new Image();
+            preload.src = item.img;
+            preload.onload = () => {
               storyMediaImg.src = item.img;
               storyMediaImg.style.opacity = '1';
-            }, 200);
+            };
+            preload.onerror = () => {
+              storyMediaImg.src = item.img;
+              storyMediaImg.style.opacity = '1';
+            };
           }
 
           if (storyHighlights) {
@@ -914,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // 14: CONCIERGE TEST DRIVE MODAL
+  // 14: CONCIERGE TEST DRIVE MODAL (WITH ACCESSIBLE FOCUS TRAP)
   // --------------------------------------------------------------------------
   const initModals = () => {
     const reserveModal = document.getElementById('reserveModal');
@@ -924,13 +1038,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalBtn = document.getElementById('closeModalBtn');
     const reserveForm = document.getElementById('reserveForm');
     const modalFeedback = document.getElementById('modalFeedback');
+    let lastActiveElement = null;
 
     const toggleModal = (show = true) => {
       reserveModal.classList.toggle('open', show);
       reserveModal.setAttribute('aria-hidden', show ? 'false' : 'true');
+
+      const mainContent = document.getElementById('mainContent');
+      if (mainContent) {
+        mainContent.setAttribute('aria-hidden', show ? 'true' : 'false');
+      }
+
       document.body.style.overflow = show ? 'hidden' : '';
-      if (!show && modalFeedback) {
-        modalFeedback.textContent = '';
+
+      if (show) {
+        lastActiveElement = document.activeElement;
+        const focusable = reserveModal.querySelector('input, select, button, textarea, a[href]');
+        if (focusable) {
+          setTimeout(() => focusable.focus(), 60);
+        }
+      } else {
+        if (modalFeedback) modalFeedback.textContent = '';
+        if (lastActiveElement && typeof lastActiveElement.focus === 'function') {
+          lastActiveElement.focus();
+        }
       }
     };
 
@@ -951,9 +1082,26 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Keyboard support: Escape closes modal; Tab traps focus
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && reserveModal.classList.contains('open')) {
-        toggleModal(false);
+      if (reserveModal.classList.contains('open')) {
+        if (e.key === 'Escape') {
+          toggleModal(false);
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = reserveModal.querySelectorAll('a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])');
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     });
 
@@ -965,7 +1113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const city = document.getElementById('preferredCity')?.value || 'Flagship Studio';
 
         if (modalFeedback) {
-          modalFeedback.innerHTML = `✓ Thank you, ${name}. Your priority allocation request for the <strong>${model}</strong> at our ${city} has been confirmed. A bespoke concierge advisor will contact you shortly.`;
+          modalFeedback.innerHTML = `✓ <strong>[Demo Simulation]</strong> Thank you, ${name}. Your priority allocation request for the <strong>${model}</strong> at our ${city} studio has been recorded locally.`;
           reserveForm.reset();
         }
       });
@@ -990,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contactFeedback.innerHTML = `
         <div class="config-saved-alert visible" style="margin-top: 20px;">
           <span class="alert-icon">✓</span>
-          <span class="alert-text">Reservation request received for ${name} (${model} · ${city}). A dedicated concierge advisor will reach out within 2 hours.</span>
+          <span class="alert-text"><strong>[Demo Simulation]</strong> Reservation inquiry recorded locally for ${name} (${model} · ${city}). No network dispatch occurred.</span>
         </div>
       `;
       contactForm.reset();
@@ -1010,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = newsletterEmail.value.trim();
         if (email) {
-          newsletterMsg.textContent = '✓ Subscribed to confidential telemetry dispatch.';
+          newsletterMsg.textContent = '✓ [Demo Simulation] Subscribed locally to telemetry updates.';
           newsletterEmail.value = '';
           setTimeout(() => {
             newsletterMsg.textContent = '';
@@ -1090,8 +1238,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroContent = document.querySelector('.hero-content');
     const carStageImage = document.querySelector('.car-stage-image, .the-car-media img, #carPreviewImg');
     const interiorHeroImg = document.querySelector('.interior-display-img, .interior-stage img');
-    const ctaTitle = document.querySelector('.cta-title');
-    const ctaSection = document.querySelector('.cta-section');
+    const ctaSection = document.getElementById('cta') || document.querySelector('.final-cta-section, .cta-section');
+    const ctaTitle = document.querySelector('.cta-heading, .cta-title');
 
     const updateParallax = (scrollY) => {
       // 1. HERO PARALLAX
@@ -1153,21 +1301,28 @@ document.addEventListener('DOMContentLoaded', () => {
         updateParallax(e.scroll);
       });
     } else {
+      let ticking = false;
       window.addEventListener('scroll', () => {
-        requestAnimationFrame(() => updateParallax(window.scrollY));
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            updateParallax(window.scrollY);
+            ticking = false;
+          });
+        }
       }, { passive: true });
     }
   };
 
   // --------------------------------------------------------------------------
-  // 19: REUSABLE LIQUID GLASS & SUBTLE 3D TILT ENGINE
+  // 19: REUSABLE LIQUID GLASS & SUBTLE 3D TILT ENGINE (COMPOSED VIA CSS VARIABLES)
   // --------------------------------------------------------------------------
   const initLiquidGlassCards = () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
     const glassCards = document.querySelectorAll(
-      '.liquid-glass, .bento-card, .metric-card, .telemetry-box, .model-card, .price-summary-card, .interior-card, .spec-card, .config-card, .tech-story-preview'
+      '.liquid-glass, .bento-card, .metric-card, .model-card, [data-expandable="true"]'
     );
     if (!glassCards.length) return;
 
@@ -1183,33 +1338,42 @@ document.addEventListener('DOMContentLoaded', () => {
         card.prepend(highlight);
       }
 
-      // Pointer tracking & subtle physical 3D tilt
+      // Pointer tracking & subtle physical 3D tilt (composed via CSS variables)
+      let rafActive = false;
       const handlePointerMove = (e) => {
-        const rect = card.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        if (rafActive) return;
+        rafActive = true;
 
-        // Custom CSS variables for pointer spotlight
-        card.style.setProperty('--mouse-x', `${mouseX}px`);
-        card.style.setProperty('--mouse-y', `${mouseY}px`);
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
 
-        // Subtle 3D tilt: max approximately ±2 degrees (Desktop only)
-        if (!prefersReducedMotion && !isTouch) {
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const percentX = (mouseX - centerX) / centerX;
-          const percentY = (mouseY - centerY) / centerY;
+          // Custom CSS variables for pointer spotlight
+          card.style.setProperty('--mouse-x', `${mouseX}px`);
+          card.style.setProperty('--mouse-y', `${mouseY}px`);
 
-          const tiltX = (percentY * -1.8).toFixed(2);
-          const tiltY = (percentX * 1.8).toFixed(2);
+          // Subtle 3D tilt: max approximately ±1.8 degrees (Desktop only)
+          if (!prefersReducedMotion && !isTouch) {
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const percentX = (mouseX - centerX) / centerX;
+            const percentY = (mouseY - centerY) / centerY;
 
-          card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.012, 1.012, 1.012)`;
-        }
+            const tiltX = (percentY * -1.8).toFixed(2);
+            const tiltY = (percentX * 1.8).toFixed(2);
+
+            card.style.setProperty('--tilt-x', `${tiltX}deg`);
+            card.style.setProperty('--tilt-y', `${tiltY}deg`);
+          }
+          rafActive = false;
+        });
       };
 
       const handlePointerLeave = () => {
         if (!prefersReducedMotion && !isTouch) {
-          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+          card.style.setProperty('--tilt-x', '0deg');
+          card.style.setProperty('--tilt-y', '0deg');
         }
       };
 
